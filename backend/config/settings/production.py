@@ -14,3 +14,6 @@ CSRF_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = False
+
+if NEWSLETTER_CONSENT_VERSION.startswith("development-"):  # noqa: F405
+    raise ImproperlyConfigured("Production requires an approved newsletter consent text/version")

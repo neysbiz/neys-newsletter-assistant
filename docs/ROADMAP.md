@@ -75,7 +75,7 @@ Reihenfolge: M0 → M1 → M2 → M3 → M4 → M6 → M7. M5 folgt auf M4 und D
 | Meilenstein | Ergebnis | Abhängigkeit | Status |
 |---|---|---|---|
 | M0 | Baseline und Projektbasis | Richtlinien, lokaler Bestand, später Repo | Implementiert; CI-Abnahme ausstehend |
-| M1 | Anmeldung, DOI und Abmeldung | M0 | Offen |
+| M1 | Anmeldung, DOI und Abmeldung | M0 | Implementiert; PostgreSQL/CI-Abnahme offen |
 | M2 | Mailchimp-Übernahme und Kontakte | M1, Export/Nachweise | Offen |
 | M3 | Editor und E-Mail-Rendering | M1 | Offen |
 | M4 | Kontrollierter Versand und Rückmeldungen | M2 + M3; Anbieter für Integration | Offen |
@@ -219,3 +219,7 @@ Nächstes Arbeitspaket: M1 — im zugänglichen `neys-newsletter-assistant` zuer
 ## 8. Spätere Erweiterungen
 
 Automationen/Serien, A/B-Tests, umfangreiche Segmentierung, KI-Inhaltserzeugung, Multi-Mandanten-Betrieb und Integrationen in weitere Neys-Produkte sind kein zusätzlicher Auftrag dieser Roadmap. Falls benötigt, nach dem stabilen Pilotbetrieb mit eigenen Anforderungen und Abnahmekriterien einplanen.
+
+## Umsetzungsstand 06.10.2026
+
+M0/M1 lokal implementiert. Django-Systemcheck/Ruff und portable Funktionsprüfungen erfolgreich. Eine temporäre, nicht versionierte SQLite-Prüfumgebung prüft die Fachabläufe; sie ist keine unterstützte Anwendungs- oder Testkonfiguration und ersetzt keine PostgreSQL-Abnahme. PostgreSQL-Parallelitäts- und Redis/Worker-Gates sind separat markiert und in CI obligatorisch. Push wurde automatisch blockiert; deshalb noch keine CI-Ergebnisse und kein Remote-Codeupdate. M2 wartet auf Originalexport/Nachweise. M3 kann unabhängig vorbereitet werden.

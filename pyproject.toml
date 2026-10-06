@@ -27,6 +27,7 @@ DJANGO_SETTINGS_MODULE = "config.settings.test"
 pythonpath = ["backend"]
 testpaths = ["backend"]
 addopts = "--strict-markers"
+markers = ["infrastructure: real PostgreSQL/Redis/worker integration", "postgresql: PostgreSQL locking/concurrency requirements"]
 
 [tool.ruff]
 target-version = "py312"

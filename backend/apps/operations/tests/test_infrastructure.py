@@ -4,6 +4,8 @@ from apps.operations.tasks import worker_probe
 from celery.contrib.testing.worker import start_worker
 from config.celery import app
 
+pytestmark = pytest.mark.infrastructure
+
 
 @pytest.mark.django_db
 def test_database_and_redis_are_reachable():

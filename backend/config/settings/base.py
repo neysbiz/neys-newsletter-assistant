@@ -18,9 +18,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "apps.accounts",
     "apps.operations",
+    "apps.contacts",
+    "apps.consents",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "apps.consents.middleware.ConsentPagePrivacyMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -71,7 +74,6 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_RESULT_EXPIRES = 300
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-CELERY_BEAT_SCHEDULE = {}
 EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="newsletter@example.invalid")
 EMAIL_TIMEOUT = 10
@@ -83,8 +85,24 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "filters": {"sensitive_paths": {"()": "apps.operations.logging.SensitivePathFilter"}},
+    "handlers": {"console": {"class": "logging.StreamHandler", "filters": ["sensitive_paths"]}},
     "root": {"handlers": ["console"], "level": "INFO"},
     # Public token paths must not enter access logs; configure proxy logs likewise.
     "loggers": {"django.server": {"handlers": ["console"], "level": "ERROR", "propagate": False}},
+}
+
+NEWSLETTER_CONSENT_VERSION = env("NEWSLETTER_CONSENT_VERSION", default="development-v1")
+NEWSLETTER_CONSENT_TEXT = env(
+    "NEWSLETTER_CONSENT_TEXT",
+    default=(
+        "Entwicklungsformular: Ich möchte den Newsletter per E-Mail erhalten "
+        "und kann mich jederzeit abmelden."
+    ),
+)
+CELERY_BEAT_SCHEDULE = {
+    "dispatch-confirmations": {
+        "task": "apps.consents.tasks.dispatch_pending_confirmations",
+        "schedule": 30.0,
+    },
 }
