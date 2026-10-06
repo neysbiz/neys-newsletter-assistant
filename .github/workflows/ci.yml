@@ -1,0 +1,32 @@
+name: Quality gates
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env: {POSTGRES_DB: newsletter, POSTGRES_USER: newsletter, POSTGRES_PASSWORD: newsletter}
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U newsletter" --health-interval 5s --health-timeout 3s --health-retries 12
+      redis:
+        image: redis:7
+        ports: ["6379:6379"]
+        options: --health-cmd "redis-cli ping" --health-interval 5s --health-retries 12
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.test
+      DATABASE_URL: postgresql://newsletter:newsletter@127.0.0.1:5432/newsletter
+      REDIS_URL: redis://127.0.0.1:6379/0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.13'}
+      - run: pip install -r requirements-dev.lock
+      - run: ruff check . && ruff format --check .
+      - run: python backend/manage.py check
+      - run: python backend/manage.py makemigrations --check --dry-run
+      - run: python backend/manage.py migrate --noinput
+      - run: pytest -q

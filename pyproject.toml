@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neys-newsletter-assistant"
+version = "0.1.0"
+description = "Newsletter management with explicit consent and controlled delivery"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "Django>=5.2,<5.3",
+  "celery[redis]>=5.6,<5.7",
+  "psycopg[binary]>=3.2,<4",
+  "django-environ>=0.12,<1",
+  "gunicorn>=23,<26",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "pytest-django>=4.9,<5", "ruff>=0.12,<1"]
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+include = ["config*", "apps*"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+pythonpath = ["backend"]
+testpaths = ["backend"]
+addopts = "--strict-markers"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

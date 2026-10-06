@@ -1,0 +1,2 @@
+{% extends 'layouts/base.html' %}{% block title %}Anmelden · Neys Newsletter{% endblock %}
+{% block content %}<h1>Verwaltung anmelden</h1><form method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}"><button>Anmelden</button></form>{% endblock %}

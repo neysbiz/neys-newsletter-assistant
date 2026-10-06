@@ -30,7 +30,7 @@ Tracking ist gewünschter Funktionsumfang. Seine konkrete Einwilligungs- und Dat
 
 | ID | Entscheidung / Nachweis | Zeitpunkt | Auswirkung bei fehlender Klärung |
 |---|---|---|---|
-| D01 | Originale Neys-Richtlinien, insbesondere `docs/development_workflow.md`, `docs/django_architecture_baseline.md` und vorhandene `AGENTS.md`, im zugänglichen Projektbestand lesen | Vor Anwendungscode / M0 | Originaldateien sind hier nicht verfügbar; folgende Arbeitsregeln sind eine nachvollziehbare Projektplanung, keine behauptete vollständige Kopie |
+| D01 | Originale Neys-Richtlinien, insbesondere `docs/development_workflow.md`, `docs/django_architecture_baseline.md` und vorhandene `AGENTS.md`, im zugänglichen Projektbestand lesen | Vor Anwendungscode / M0 | Originalbaseline am 06.10.2026 gelesen und übernommen; Herkunft in development_workflow.md |
 | D02 | Repo `https://github.com/neysbiz/neys-newsletter-assistant.git`, Standardbranch `main`; Lese-/Schreibzugriff bestätigt, Ausgangsstand leer | Erledigt am 06.10.2026 | Lokale Mac-Anbindung noch ausstehend |
 | D03 | Konkreter Mailtarif/Versanddienst, erlaubte Nutzung, Limits, Rückläufer-/Beschwerdekanal | Vor M4-Integration | Providerunabhängige Entwicklung möglich; echter Kampagnenversand wartet |
 | D04 | Absenderdomain/-adresse, Reply-To, DNS-Zugang und öffentlich erreichbare HTTPS-Domain | Vor Testversand / M4 | Keine produktiven Versand- oder DOI-URLs festlegen |
@@ -74,7 +74,7 @@ Reihenfolge: M0 → M1 → M2 → M3 → M4 → M6 → M7. M5 folgt auf M4 und D
 
 | Meilenstein | Ergebnis | Abhängigkeit | Status |
 |---|---|---|---|
-| M0 | Baseline und Projektbasis | Richtlinien, lokaler Bestand, später Repo | Offen |
+| M0 | Baseline und Projektbasis | Richtlinien, lokaler Bestand, später Repo | Implementiert; CI-Abnahme ausstehend |
 | M1 | Anmeldung, DOI und Abmeldung | M0 | Offen |
 | M2 | Mailchimp-Übernahme und Kontakte | M1, Export/Nachweise | Offen |
 | M3 | Editor und E-Mail-Rendering | M1 | Offen |
@@ -212,7 +212,9 @@ Ein Arbeitspaket ist abgeschlossen, wenn seine Abnahmekriterien erfüllt, passen
 
 | 06.10.2026 | Roadmap v1.1 für Repository-Synchronisierung vorbereitet; Remote erreichbar und leer | GitHub-Metadaten, Branchprüfung und `git ls-remote`; Dokumentprüfung | Commit-Synchronisierung verifizieren; Mac-Abgleich und Originalbaseline weiterhin offen |
 
-Nächstes Arbeitspaket: M0 — im zugänglichen `neys-newsletter-assistant` zuerst vorhandenen Inhalt und Neys-Richtlinien lesen, Roadmap übernehmen und Projektbasis einrichten. Der fehlende Versandanbieter blockiert die providerunabhängige Projektbasis nicht.
+M0 umgesetzt: Settings, Django-Verwaltung, PostgreSQL/Redis/Celery-Compose, Lockfiles, Ruff und CI. Django-Check/Ruff lokal erfolgreich. Docker/PostgreSQL sind lokal nicht startbar; vollständige Abnahme über GitHub CI offen.
+
+Nächstes Arbeitspaket: M1 — im zugänglichen `neys-newsletter-assistant` zuerst vorhandenen Inhalt und Neys-Richtlinien lesen, Roadmap übernehmen und Projektbasis einrichten. Der fehlende Versandanbieter blockiert die providerunabhängige Projektbasis nicht.
 
 ## 8. Spätere Erweiterungen
 

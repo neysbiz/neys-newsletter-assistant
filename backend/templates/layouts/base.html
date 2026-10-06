@@ -1,0 +1,5 @@
+{% load static %}<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}Neys Newsletter{% endblock %}</title><link rel="stylesheet" href="{% static 'app.css' %}"></head>
+<body><header><a href="{% url 'dashboard' %}">Neys Newsletter</a>{% if user.is_authenticated %}<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Abmelden</button></form>{% endif %}</header>
+<main>{% for message in messages %}<p class="notice" role="status">{{ message }}</p>{% endfor %}{% block content %}{% endblock %}</main></body></html>
