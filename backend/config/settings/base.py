@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "apps.operations",
     "apps.contacts",
     "apps.consents",
+    "apps.campaigns",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -106,3 +107,7 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": 30.0,
     },
 }
+
+MEDIA_URL = "/media-images/"
+MEDIA_ROOT = ROOT_DIR / "media"
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024

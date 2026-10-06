@@ -7,6 +7,7 @@ x-app: &app
     REDIS_URL: redis://redis:6379/0
   volumes:
     - ./backend:/app/backend
+    - media_data:/app/media
   depends_on:
     postgres: {condition: service_healthy}
     redis: {condition: service_healthy}
@@ -47,3 +48,4 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  media_data:

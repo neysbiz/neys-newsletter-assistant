@@ -1,0 +1,7 @@
+{% autoescape off %}{{ preheader }}
+
+{% for block in blocks %}{% if block.type == 'text' %}{{ block.text }}{% elif block.type == 'image' %}[Bild: {{ block.alt }}]
+{{ block.url }}{% elif block.type == 'link' %}{{ block.label }}: {{ block.url }}{% endif %}
+
+{% endfor %}Newsletter abmelden: {{ unsubscribe_url }}
+{% endautoescape %}

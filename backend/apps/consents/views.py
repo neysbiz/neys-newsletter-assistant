@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods, require_POST
+from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from .forms import SubscribeForm
 from .services import confirm_subscription, request_subscription, unsubscribe
@@ -74,3 +74,12 @@ def one_click_unsubscribe(request, token):
     if request.POST.get("List-Unsubscribe") != "One-Click":
         return HttpResponse(status=400)
     return HttpResponse(status=200 if unsubscribe(token, source="rfc8058_post") else 400)
+
+
+@require_GET
+def test_unsubscribe(request):
+    return render(
+        request,
+        "public/result.html",
+        {"message": "Dies ist ein Testlink. Es wurde kein Abonnement geändert."},
+    )

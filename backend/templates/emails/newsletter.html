@@ -1,0 +1,6 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#f4f3f0;color:#242424;font-family:Arial,sans-serif;">
+<div style="display:none;max-height:0;overflow:hidden;">{{ preheader }}</div>
+<table role="presentation" style="width:100%;border-collapse:collapse;"><tr><td align="center"><table role="presentation" style="width:100%;max-width:600px;background:white;border-collapse:collapse;"><tr><td style="padding:24px;">
+{% for block in blocks %}{% if block.type == 'text' %}<div style="font-size:17px;line-height:1.6;">{{ block.text|linebreaksbr }}</div>{% elif block.type == 'image' %}<p><img src="{{ block.url }}" alt="{{ block.alt }}" width="552" style="width:100%;max-width:552px;height:auto;display:block;"></p>{% elif block.type == 'link' %}<p><a href="{{ block.url }}" style="display:inline-block;padding:12px 18px;background:#242424;color:white;text-decoration:none;">{{ block.label }}</a></p>{% endif %}{% endfor %}
+<hr style="border:0;border-top:1px solid #ddd;margin-top:28px;"><p style="font-size:14px;"><a href="{{ unsubscribe_url }}" style="color:#444;">Newsletter abmelden</a></p>
+</td></tr></table></td></tr></table></body></html>
