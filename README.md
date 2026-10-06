@@ -46,3 +46,9 @@ ruff format --check .
 ```
 
 Tests benötigen laufendes PostgreSQL; pytest erzeugt/löscht eine eigene Testdatenbank. Niemals Produktionszugang für Tests verwenden. Console-Backend sendet keine echte E-Mail. SMTP-Anbieter, öffentliche Domain und Trackingfreigabe sind offen.
+
+## Aktueller Funktionsstand
+
+Anmeldung unter `/`, Double-Opt-in mit bestätigendem POST, Abmeldung, Staff-Kontaktliste, strukturierter Kampagneneditor, Bildverwaltung, Revisionen, Vorschau und Testmail sind implementiert. Einwilligungstext ist für Entwicklung gekennzeichnet. Kein Kampagnenversand/Import/Tracking aktiviert. Produktive Absenderangaben und SimplyNeys-CI-/Mailclient-Abnahme noch offen.
+
+Der aktuelle Code ist zunächst nur in der Implementierungs-Arbeitsumgebung; GitHub synchronisiert erst nach Push-Freigabe. 47 portable Funktionsprüfungen unter Python 3.12/3.13 sowie ein echter Redis/Celery-Rundlauf bestanden. PostgreSQL-/Docker-/Remote-CI-Abnahme steht aus. Details und genaue Prüfgrenzen in `docs/progress.md`.

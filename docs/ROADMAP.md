@@ -1,6 +1,6 @@
 # Neys Newsletter Assistant — Entwicklungsroadmap
 
-Stand: 06.10.2026 (Europe/Berlin) · Version 1.1
+Stand: 06.10.2026 (Europe/Berlin) · Version 1.2
 
 ## 1. Zweck und Verwendung
 
@@ -9,7 +9,7 @@ Diese Roadmap steuert die Umsetzung von `neys-newsletter-assistant`. Sie ist der
 Zielablage auf dem Mac:
 `/Users/andreas/Documents/Development/Django/django-projects/neys-newsletter-assistant/docs/ROADMAP.md`
 
-Arbeitsstand: Roadmap vorhanden; kein Anwendungscode erstellt, keine Anwendungstests ausgeführt. Repository `neysbiz/neys-newsletter-assistant` am 06.10.2026 erreichbar, bei Prüfung leer und öffentlich; die Roadmap wird als erster Commit synchronisiert. Der Mac-Projektordner ist aus der aktuellen Ausführungsumgebung nicht erreichbar. Die Datei muss dort übernommen werden; eine Ablage auf dem Mac wird hier nicht behauptet.
+Aktueller Stand: M0/M1 und der funktionale Teil von M3 lokal implementiert. GitHub enthält noch ausschließlich die Ausgangsroadmap (`f640a04`). Push wartet auf ausdrückliche Freigabe nach automatischer Ablehnung. Mac-Projektordner wurde nicht verändert. PostgreSQL/Docker/CI-Abnahme und produktive Entscheidungen sind offen.
 
 ## 2. Bestätigter Umfang
 
@@ -37,7 +37,7 @@ Tracking ist gewünschter Funktionsumfang. Seine konkrete Einwilligungs- und Dat
 | D05 | Tracking-Einwilligung, Widerruf, Hinweistexte und Aufbewahrungsregeln anhand aktueller Primärquellen prüfen und festlegen | Vor M5-Aktivierung | Tracking bleibt ausgeschaltet; Newsletter ohne Tracking bleibt möglich |
 | D06 | Mailchimp-Exportfelder, Nachweise und Sperrstatus tatsächlich prüfen | Vor produktivem Import / M2 | Keine fehlenden Nachweise rekonstruieren oder erfinden |
 | D07 | Aktueller IONOS-Standort, Verträge, Backupziel und Datenflüsse einschließlich Versandanbieter prüfen | Vor produktiver Datenübernahme / M6 | DSGVO-Konformität nicht allein aus dem Hostinganbieter ableiten |
-| D08 | Frontend-Ansatz, konkrete unterstützte Versionen, Testwerkzeug, Ports und Deploymentverfahren mit Originalbaseline abgleichen | M0 | Keine Versionen/Ports aus anderen Projekten ungeprüft kopieren |
+| D08 | Templates/CSS, Python 3.13 (3.12–3.14 unterstützt), Django 5.2, pytest/Ruff; konfigurierbare lokale Ports 8005/55435/6385 | Abgleich erledigt; ADR 0001 | Mac-Portbelegung und produktives Deployment noch nicht geprüft |
 
 Die Entscheidungen werden später in `docs/decisions/` mit Datum, Begründung und Auswirkungen festgehalten. Rechtliche Anforderungen und aktuelle Anbieterbedingungen werden im jeweiligen Arbeitspaket anhand verifizierter Quellen geprüft; diese Roadmap liefert keine rechtliche Freigabe.
 
@@ -77,7 +77,7 @@ Reihenfolge: M0 → M1 → M2 → M3 → M4 → M6 → M7. M5 folgt auf M4 und D
 | M0 | Baseline und Projektbasis | Richtlinien, lokaler Bestand, später Repo | Implementiert; CI-Abnahme ausstehend |
 | M1 | Anmeldung, DOI und Abmeldung | M0 | Implementiert; PostgreSQL/CI-Abnahme offen |
 | M2 | Mailchimp-Übernahme und Kontakte | M1, Export/Nachweise | Offen |
-| M3 | Editor und E-Mail-Rendering | M1 | Offen |
+| M3 | Editor und E-Mail-Rendering | M1 | Funktional implementiert; CI/SimplyNeys-CI/Mailclients offen |
 | M4 | Kontrollierter Versand und Rückmeldungen | M2 + M3; Anbieter für Integration | Offen |
 | M5 | Auswertung und einwilligungsabhängiges Tracking | M4; D05 für Tracking | Offen |
 | M6 | Produktionsbetrieb und Datenschutzprozesse | M4, Betriebsentscheidungen | Offen |
@@ -214,7 +214,7 @@ Ein Arbeitspaket ist abgeschlossen, wenn seine Abnahmekriterien erfüllt, passen
 
 M0 umgesetzt: Settings, Django-Verwaltung, PostgreSQL/Redis/Celery-Compose, Lockfiles, Ruff und CI. Django-Check/Ruff lokal erfolgreich. Docker/PostgreSQL sind lokal nicht startbar; vollständige Abnahme über GitHub CI offen.
 
-Nächstes Arbeitspaket: M1 — im zugänglichen `neys-newsletter-assistant` zuerst vorhandenen Inhalt und Neys-Richtlinien lesen, Roadmap übernehmen und Projektbasis einrichten. Der fehlende Versandanbieter blockiert die providerunabhängige Projektbasis nicht.
+Nächstes Arbeitspaket: nach Freigabe GitHub synchronisieren, obligatorische PostgreSQL/Redis-CI ausführen und M0/M1/M3 dort abnehmen. Für M2 Originalexport/Nachweise prüfen, für M3 CI-/Mailclient-Abgleich abschließen; vor M4 Versanddienst/Domain festlegen.
 
 ## 8. Spätere Erweiterungen
 
@@ -222,4 +222,6 @@ Automationen/Serien, A/B-Tests, umfangreiche Segmentierung, KI-Inhaltserzeugung,
 
 ## Umsetzungsstand 06.10.2026
 
-M0/M1 lokal implementiert. Django-Systemcheck/Ruff und portable Funktionsprüfungen erfolgreich. Eine temporäre, nicht versionierte SQLite-Prüfumgebung prüft die Fachabläufe; sie ist keine unterstützte Anwendungs- oder Testkonfiguration und ersetzt keine PostgreSQL-Abnahme. PostgreSQL-Parallelitäts- und Redis/Worker-Gates sind separat markiert und in CI obligatorisch. Push wurde automatisch blockiert; deshalb noch keine CI-Ergebnisse und kein Remote-Codeupdate. M2 wartet auf Originalexport/Nachweise. M3 kann unabhängig vorbereitet werden.
+M0/M1 lokal implementiert. Django-Systemcheck/Ruff und portable Funktionsprüfungen erfolgreich. Eine temporäre, nicht versionierte SQLite-Prüfumgebung prüft die Fachabläufe; sie ist keine unterstützte Anwendungs- oder Testkonfiguration und ersetzt keine PostgreSQL-Abnahme. PostgreSQL-Parallelitäts- und Redis/Worker-Gates sind separat markiert und in CI obligatorisch. Push wurde automatisch blockiert; deshalb noch keine CI-Ergebnisse und kein Remote-Codeupdate. M2 wartet auf Originalexport/Nachweise. M3 funktional implementiert; gestalterische und praktische Abnahme offen.
+
+M3: Formset-Editor mit Text/Bild/CTA, validierte Platzhalter/Links, Bildprüfung/Neu-Kodierung, eingefrorene Revisionen, gemeinsame Text-/HTML-Renderfunktion und Testmail implementiert. 47 portable Funktionsprüfungen unter Python 3.12 und 3.13 erfolgreich; 1 echter Redis-6.2/Celery-Rundlauf erfolgreich (Redis 7 bleibt CI-Gate). Django-Systemcheck, Migrationsdelta-Prüfung auf temporärem SQLite-Harness, Ruff und Dependencycheck erfolgreich. Der vollständige CI-Lauf einschließlich PostgreSQL/Parallelität bleibt offen; praktischer Mailclient-/CI-Design-Abgleich ebenfalls. Keine echten Kundenmails oder Daten übernommen.
