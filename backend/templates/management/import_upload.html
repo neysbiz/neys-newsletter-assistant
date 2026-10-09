@@ -1,0 +1,9 @@
+{% extends 'layouts/base.html' %}{% block content %}
+<h1>Mailchimp-Kontakte importieren</h1>
+<p>CSV oder TSV in UTF-8, höchstens 2 MiB und 2000 Datenzeilen. E-Mail-Spalte: Emailadresse, E-Mail-Adresse oder Email Address. Der Upload erstellt nur eine Vorschau.</p>
+<p>Fehlt Status, wird die Datei entsprechend deiner Bestätigung als aktiver Export behandelt. Kontakte erhalten dadurch weder Versandfreigabe noch Bestätigungsmails.</p>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<button>Vorschau erstellen</button></form>
+<h2>Deine letzten Importläufe</h2>
+{% for batch in batches %}<p><a href="{% url 'contact_import_preview' batch.id %}">{{ batch.filename }}</a> · {{ batch.get_status_display }} · {{ batch.created_at }}</p>{% empty %}<p>Noch kein Importlauf.</p>{% endfor %}
+<p><a href="{% url 'contacts' %}">Zur Kontaktliste</a></p>
+{% endblock %}

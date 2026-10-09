@@ -1,6 +1,6 @@
 # Neys Newsletter Assistant — Entwicklungsroadmap
 
-Stand: 06.10.2026 (Europe/Berlin) · Version 1.2
+Stand: 09.10.2026 (Europe/Berlin) · Version 1.3
 
 ## 1. Zweck und Verwendung
 
@@ -9,7 +9,7 @@ Diese Roadmap steuert die Umsetzung von `neys-newsletter-assistant`. Sie ist der
 Zielablage auf dem Mac:
 `/Users/andreas/Documents/Development/Django/django-projects/neys-newsletter-assistant/docs/ROADMAP.md`
 
-Aktueller Stand (09.10.2026): M0/M1 und der funktionale Teil von M3 sind auf main integriert; Bootstrap- und CSRF-CI erfolgreich. M2-Datenstruktur/Validierungs- und Stagingservice sowie erweiterte DOI-Nachweise umgesetzt. Datei-Upload/Importvorschau und produktiver Import offen. Details in docs/contact-import-and-doi.md. Kein Produktivdeploy, keine echten Mails oder Kundendaten übernommen.
+Aktueller Stand (09.10.2026): M0/M1 und der funktionale Teil von M3 sind auf main integriert; technische CI erfolgreich. M2-Datenstruktur und erweiterte DOI-Nachweise sowie Datei-Upload/Importvorschau mit ausdrücklicher Übernahme umgesetzt. Produktiver Import, Kontaktbearbeitung/-export und praktische Abnahme noch offen. Details in docs/contact-import-and-doi.md. Kein Produktivdeploy, keine echten Mails oder Kundendaten übernommen.
 
 ## 2. Bestätigter Umfang
 
@@ -76,7 +76,7 @@ Reihenfolge: M0 → M1 → M2 → M3 → M4 → M6 → M7. M5 folgt auf M4 und D
 |---|---|---|---|
 | M0 | Baseline und Projektbasis | Richtlinien, lokaler Bestand, später Repo | Implementiert; CI erfolgreich |
 | M1 | Anmeldung, DOI und Abmeldung | M0 | Implementiert; PostgreSQL/Redis-CI erfolgreich; Nachweise erweitert |
-| M2 | Mailchimp-Übernahme und Kontakte | M1, Export/Nachweise | Struktur/Staging umgesetzt; Datei-Upload/Importvorschau offen |
+| M2 | Mailchimp-Übernahme und Kontakte | M1, Export/Nachweise | Upload/Vorschau/Übernahme umgesetzt; Bearbeitung/Export und praktische Abnahme offen |
 | M3 | Editor und E-Mail-Rendering | M1 | Funktional implementiert; technische CI erfolgreich; SimplyNeys-Design/Mailclients offen |
 | M4 | Kontrollierter Versand und Rückmeldungen | M2 + M3; Anbieter für Integration | Offen |
 | M5 | Auswertung und einwilligungsabhängiges Tracking | M4; D05 für Tracking | Offen |
@@ -214,7 +214,7 @@ Ein Arbeitspaket ist abgeschlossen, wenn seine Abnahmekriterien erfüllt, passen
 
 M0 umgesetzt: Settings, Django-Verwaltung, PostgreSQL/Redis/Celery-Compose, Lockfiles, Ruff und CI. Django-Check/Ruff lokal erfolgreich. Docker/PostgreSQL sind lokal nicht startbar; vollständige Abnahme über GitHub CI offen.
 
-Nächstes Arbeitspaket: M2-Datei-Upload mit Importvorschau und expliziter Übernahme auf Basis des aktiven Exports. Vor der Umstellung neue DOI-Anmeldung und produktive Hinweise festlegen. Vor M4 Versanddienst/Domain festlegen; M3-Design-/Mailclient-Abgleich abschließen. Frühere Validierungsabschnitte unten dokumentieren den damaligen Stand.
+Nächstes Arbeitspaket: Importablauf lokal mit synthetischer Datei praktisch prüfen, M2-Kontaktbearbeitung/-export vervollständigen. Für M4 Versanddienst, Absender und Domain festlegen. Vor der Umstellung neue DOI-Anmeldung, produktive Hinweise und den Ablauf zur erneuten Bestätigung festlegen. M3-Design-/Mailclient-Abgleich abschließen. Frühere Validierungsabschnitte unten dokumentieren den damaligen Stand.
 
 ## 8. Spätere Erweiterungen
 

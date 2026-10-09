@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from django.db import models
 
 
@@ -33,6 +34,33 @@ class MailchimpRecord(models.Model):
             models.CheckConstraint(
                 condition=models.Q(source_status="subscribed"), name="active_mailchimp_source_only"
             ),
+        ]
+
+
+class ImportBatch(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    filename = models.CharField(max_length=254)
+    file_sha256 = models.CharField(max_length=64)
+    delimiter = models.CharField(max_length=1)
+    ignored_columns = models.JSONField(default=list)
+    rows = models.JSONField(default=list)
+    status = models.CharField(
+        max_length=20,
+        default="preview",
+        choices=[("preview", "Vorschau"), ("completed", "Übernommen"), ("cancelled", "Verworfen")],
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField(db_index=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    result = models.JSONField(default=dict)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(status__in=["preview", "completed", "cancelled"]),
+                name="valid_import_batch_status",
+            )
         ]
 
 

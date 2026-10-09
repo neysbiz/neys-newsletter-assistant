@@ -1,6 +1,6 @@
 # Kontakte, Mailchimp-Quelldaten und neuer DOI
 
-Stand: 09.10.2026. Datenstruktur und Services implementiert; Datei-Upload, Importvorschau und Freigabeoberfläche sind das nächste M2-Paket. Keine realen Adressen übernommen und keine Bestätigungskampagne gestartet.
+Stand: 09.10.2026. Datenstruktur, Datei-Upload, Importvorschau und ausdrückliche Übernahme implementiert. Keine realen Adressen übernommen und keine Bestätigungskampagne gestartet. Benutzerablauf in userGuide.md.
 
 ## Importvertrag
 
@@ -23,6 +23,8 @@ Der bereitgestellte Export enthält laut Betreiber ausschließlich aktive Abonne
 Neue importierte Kontakte erhalten `imported` (neue Bestätigung erforderlich), keine ConsentEvidence und keinen Mailauftrag. Das Marketingflag schaltet weder Newsletter, Tracking noch Kundenkonten frei. Eine zukünftige Kundenkonto-/Marketingfunktion benötigt eigene Regeln und zweckbezogene Nachweise.
 
 ## Neue Bestätigung
+
+ImportBatch speichert Besitzer, Dateiname, SHA-256 der hochgeladenen Datei, Trennzeichen, ignorierte Spalten und eine serverseitige Vorschau. Die Rohdatei wird nicht im Medienordner gespeichert. Die Vorschau läuft nach 30 Minuten ab. Übernahme ist ein CSRF-geschützter POST, prüft Besitz/Staff-Recht erneut und sperrt den Lauf in einer Datenbanktransaktion. Fehler blockieren die gesamte Übernahme; Wiederholung eines abgeschlossenen Laufs liefert nur sein bestehendes Ergebnis. Lokale Kontaktzustände werden bei Übernahme neu gelesen. Nach Übernahme/Verwerfen werden vorläufige Zeilen entfernt; erfolgreiche Quellsnapshots referenzieren die Importlauf-ID. Beat/Managementcommand entfernt abgelaufene Zeilen; Metadaten-Aufbewahrung/Löschung bleibt M6.
 
 Geplanter Wechsel: erneute, ausdrückliche Newsletter-Anmeldung mit dem freigegebenen neuen Text → `pending` plus DOI-Auftrag → signierter Link → Bestätigungsseite → CSRF-geschützter POST → `active`. Öffnen des Links allein bestätigt nichts. Importierte Kontakte können diesen bestehenden öffentlichen Ablauf nutzen. Eine automatisierte Einladung an alle bisherigen Abonnenten ist weder implementiert noch gestartet; Kanal, zulässiger Empfängerkreis und Formulierung werden vor der Umstellung festgelegt. Der Import ist kein Ersatz für die neue Anmeldung. Tracking bleibt ausgeschaltet.
 

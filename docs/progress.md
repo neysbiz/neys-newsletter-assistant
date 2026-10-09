@@ -1,5 +1,11 @@
 # Fortschritt
 
+## 09.10.2026 – M2-Datei-Upload, Vorschau und Übernahme
+
+Branch feat/mailchimp-upload-preview, Basis 958649d. Staff-/benutzergebundener Upload, explizite Auswahl CSV/TSV-Trennzeichen, UTF-8/BOM-Prüfung, Größen-/Zeilen-/Feldgrenzen, Fehler- und Duplikatprüfung umgesetzt. Vorschau erzeugt keine Kontakte. All-or-nothing-Übernahme erfordert Checkbox und CSRF-POST; Batch-Lock verhindert doppelte Bestätigung. Aktuelle Abmeldungen/Sperren werden erhalten. Fehler/Abbruch führen zu keiner Teilübernahme. Keine Mails und keine automatische Versandfreigabe. Importmetadaten/Prüfsumme bleiben nachvollziehbar; vorläufige Zeilen nach Übernahme/Verwerfen gelöscht. Ablauf nach 30 Minuten, Beat/CLI-Bereinigung ergänzt.
+
+Lokal: 87 portable Tests bestanden, 4 PostgreSQL-/Infrastrukturgates ausgeschlossen. Temporärer externer SQLite-Harness unter Python 3.12.14, kein Anwendungsfallback. Django check, Migrationsdelta, Ruff lint/format und Diffprüfung erfolgreich. Tests enthalten echten HTTP-Upload/SSR-Vorschau/POST-Übernahme über Django Client, CSRF/Owner-Schutz, atomaren Rücklauf und Migration der bisherigen DOI-Daten. Browser-/Mobilprüfung auf Mac nicht erfolgt. Vollständige PostgreSQL/Redis-CI einschließlich gleichzeitigem Import-POST wird vor main-Integration ausgeführt. Kein echter Kundenimport, Versand oder Deploy. Kontaktbearbeitung/-export und M4-Providerentscheidung bleiben offen.
+
 ## 06.10.2026 – M0 Projektbasis
 
 Branch `feat/m0-project-basis`, Ausgangscommit `f640a04` (nur Roadmap). Repository sauber und Remote identisch vor Start. Mac-Dateisystem ist hier nicht erreichbar.

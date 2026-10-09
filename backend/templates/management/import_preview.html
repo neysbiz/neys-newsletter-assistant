@@ -1,0 +1,17 @@
+{% extends 'layouts/base.html' %}{% block content %}
+<h1>Importvorschau</h1><p>{{ batch.filename }} · {{ batch.get_status_display }}</p>
+{% if batch.status == 'completed' %}
+<p>Übernahme abgeschlossen: {{ batch.result.new }} neue Kontakte, {{ batch.result.existing }} vorhandene Kontakte, {{ batch.result.duplicates }} identische Duplikatzeilen übersprungen. {{ batch.result.blocked }} Kontakte bleiben abgemeldet oder gesperrt.</p>
+<p>Neue Kontakte benötigen eine neue DOI-Bestätigung. Es wurden keine Mails erzeugt.</p>
+{% elif batch.status == 'preview' %}
+<p>Vorschau gültig bis {{ batch.expires_at }}. {{ rows|length }} Datenzeilen, {{ errors }} fehlerhafte Zeilen, {{ duplicates }} identische Duplikatzeilen.</p>
+{% if batch.ignored_columns %}<p>Nicht übernommene Spalten: {{ batch.ignored_columns|join:', ' }}</p>{% endif %}
+<p>Vorhandene lokale Namen, Abmeldungen und Sperren bleiben erhalten. Der lokale Status wird bei der Übernahme erneut geprüft.</p>
+<table><thead><tr><th>Dateizeile</th><th>E-Mail</th><th>Vorname</th><th>Name</th><th>Prüfung</th><th>Lokaler Status</th></tr></thead><tbody>
+{% for entry in rows %}<tr><td>{{ entry.line }}</td><td>{{ entry.email }}</td><td>{{ entry.row.Vorname }}</td><td>{{ entry.row.Name }}</td><td>{% for error in entry.errors %}<p>{{ error }}</p>{% empty %}{% if entry.duplicate %}Identische Duplikatzeile – wird übersprungen{% else %}Gültig{% endif %}{% endfor %}</td><td>{{ entry.local_status }}</td></tr>{% endfor %}
+</tbody></table>
+{% if can_apply %}<form method="post">{% csrf_token %}{{ form.as_p }}<button>Kontakte ohne Versandfreigabe übernehmen</button></form>{% else %}{{ form.non_field_errors }}<p>Übernahme nicht möglich: Fehler korrigieren oder abgelaufene Vorschau neu erstellen.</p>{% endif %}
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="cancel"><button>Vorschau verwerfen</button></form>
+{% else %}<p>Die Vorschau wurde verworfen. Es wurden keine Kontakte übernommen.</p>{% endif %}
+<p><a href="{% url 'contact_import_upload' %}">Neue Datei prüfen</a> · <a href="{% url 'contacts' %}">Kontakte</a></p>
+{% endblock %}

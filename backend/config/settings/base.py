@@ -112,6 +112,10 @@ NEWSLETTER_PRIVACY_TEXT = env(
 # Enable only with a documented retention policy and corresponding privacy notice.
 NEWSLETTER_STORE_EVIDENCE_IP = env.bool("NEWSLETTER_STORE_EVIDENCE_IP", default=False)
 CELERY_BEAT_SCHEDULE = {
+    "clear-import-previews": {
+        "task": "apps.contacts.tasks.clear_expired_import_previews",
+        "schedule": 1800.0,
+    },
     "dispatch-confirmations": {
         "task": "apps.consents.tasks.dispatch_pending_confirmations",
         "schedule": 30.0,

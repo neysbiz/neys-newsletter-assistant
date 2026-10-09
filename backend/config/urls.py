@@ -1,6 +1,6 @@
 from apps.accounts.views import dashboard
 from apps.consents import views as consent_views
-from apps.contacts.views import contacts
+from apps.contacts.views import contacts, import_review, import_upload
 from apps.operations.views import health
 from django.conf import settings
 from django.conf.urls.static import static
@@ -19,6 +19,8 @@ urlpatterns = [
         name="one_click_unsubscribe",
     ),
     path("manage/contacts/", contacts, name="contacts"),
+    path("manage/contacts/import/", import_upload, name="contact_import_upload"),
+    path("manage/contacts/import/<uuid:batch_id>/", import_review, name="contact_import_preview"),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
     path("manage/", dashboard, name="dashboard"),
