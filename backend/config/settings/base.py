@@ -101,6 +101,16 @@ NEWSLETTER_CONSENT_TEXT = env(
         "und kann mich jederzeit abmelden."
     ),
 )
+NEWSLETTER_PRIVACY_VERSION = env("NEWSLETTER_PRIVACY_VERSION", default="development-v1")
+NEWSLETTER_PRIVACY_TEXT = env(
+    "NEWSLETTER_PRIVACY_TEXT",
+    default=(
+        "Entwicklung: E-Mail-Adresse und Einwilligungsnachweis werden für den Newsletter "
+        "gespeichert. Keine echte Zustellung."
+    ),
+)
+# Enable only with a documented retention policy and corresponding privacy notice.
+NEWSLETTER_STORE_EVIDENCE_IP = env.bool("NEWSLETTER_STORE_EVIDENCE_IP", default=False)
 CELERY_BEAT_SCHEDULE = {
     "dispatch-confirmations": {
         "task": "apps.consents.tasks.dispatch_pending_confirmations",

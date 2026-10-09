@@ -4,7 +4,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from .forms import SubscribeForm
+from .models import ConfirmationToken
 from .services import confirm_subscription, request_subscription, unsubscribe
+from .tokens import decode_reference
 
 
 @require_http_methods(["GET", "POST"])
@@ -28,12 +30,23 @@ def subscribe(request):
 @require_http_methods(["GET", "POST"])
 def confirm(request, token):
     if request.method == "GET":
+        reference = decode_reference(token, "confirmation")
+        confirmation = (
+            ConfirmationToken.objects.select_related("evidence").filter(pk=reference).first()
+            if reference
+            else None
+        )
         return render(
             request,
             "public/action.html",
-            {"heading": "Newsletter bestätigen", "button": "Anmeldung bestätigen"},
+            {
+                "heading": "Newsletter bestätigen",
+                "button": "Anmeldung bestätigen",
+                "consent_text": confirmation.evidence.text if confirmation else "",
+                "privacy_text": confirmation.evidence.privacy_text if confirmation else "",
+            },
         )
-    success = confirm_subscription(token)
+    success = confirm_subscription(token, request.META.get("REMOTE_ADDR", ""))
     return render(
         request,
         "public/result.html",

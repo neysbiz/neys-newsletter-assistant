@@ -2,7 +2,7 @@
 
 Verwaltung unter `/manage/`: Anmeldung mit aktivem Staff-Account erforderlich. Normale Accounts haben keinen Verwaltungszugriff. Superuser lokal über `python backend/manage.py createsuperuser` anlegen. Abmelden über den Button (POST).
 
-Projektbasis enthält zentrale Seitenlayouts und Statusanzeige. Kontakt-/Kampagnenabläufe folgen in den jeweiligen Roadmap-Paketen.
+Projektbasis enthält zentrale Seitenlayouts und Statusanzeige. Kontaktliste und Kampagneneditor sind vorhanden; Datei-Upload/Importvorschau folgen im nächsten M2-Paket.
 
 ## Anmeldung und Abmeldung
 
@@ -19,3 +19,9 @@ Verwaltung → Kampagnen → Neuer Entwurf. Betreff und Vorschautext angeben, Te
 Bilder vorab unter Kampagnen → Bilder hochladen: JPEG/PNG, höchstens 8 MB und 20 Megapixel. Nur zur Veröffentlichung bestimmte Motive verwenden. Für jeden Bildblock ist eine Bildbeschreibung nötig. Links verwenden HTTPS. In Texten/Betreff/Vorschautext ist `{{email}}` der einzige unterstützte Platzhalter.
 
 Revision freigeben erzeugt einen unveränderlichen Stand, startet aber keinen Kampagnenversand. Revision öffnen → Vorschau oder Testmail. Testempfänger erhält Text- und HTML-Version dieser Revision; der Abmeldelink ist ein wirkungsloser Testlink. Mit dem Entwicklungs-Console-Backend erscheint die Mail im Terminal. Aktuelle Mailclient- und SimplyNeys-CI-Prüfung noch offen.
+
+## Importierte Kontakte und Nachweise
+
+Kontakte zeigt E-Mail, Vorname, Nachname, lokalen Newsletterstatus und Mailchimp-Quellstatus/Marketingflag. Neue importierte Kontakte sind bis zur neuen DOI-Bestätigung nicht versandberechtigt. Import erzeugt keine Mails. Das zusätzliche Marketingflag ist keine Newsletter-, Tracking- oder Konto-Freigabe.
+
+Im Django-Admin sind Mailchimp-Quelldaten, Einwilligungsereignisse, Tokenreferenzen und DOI-Versandaufträge schreibgeschützt einsehbar. Datenfelder und Grenzen: [contact-import-and-doi.md](contact-import-and-doi.md).

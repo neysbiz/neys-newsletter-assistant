@@ -17,3 +17,5 @@ SECURE_HSTS_PRELOAD = False
 
 if NEWSLETTER_CONSENT_VERSION.startswith("development-"):  # noqa: F405
     raise ImproperlyConfigured("Production requires an approved newsletter consent text/version")
+if NEWSLETTER_PRIVACY_VERSION.startswith("development-"):  # noqa: F405
+    raise ImproperlyConfigured("Production requires an approved privacy notice text/version")

@@ -1,13 +1,15 @@
+import hashlib
+import ipaddress
 from datetime import timedelta
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
 from django.db import transaction
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.crypto import salted_hmac
 
 from apps.contacts.models import Contact, Suppression
+from apps.contacts.services import normalize_email
 
 from .models import (
     ConfirmationMessage,
@@ -20,13 +22,13 @@ from .models import (
 from .tokens import decode_reference
 
 
-def normalize_email(email):
-    email = email.strip()
-    validate_email(email)
-    if len(email) > 254:
-        raise ValidationError("E-Mail-Adresse zu lang")
-    # Explicit application policy: case-insensitive addresses, no provider-specific rewrites.
-    return email, email.casefold()
+def evidence_address(value):
+    if not settings.NEWSLETTER_STORE_EVIDENCE_IP:
+        return None
+    try:
+        return str(ipaddress.ip_address(value))
+    except (ValueError, TypeError):
+        return None
 
 
 def consume_limits(email_key, remote_address):
@@ -84,18 +86,32 @@ def request_subscription(email, remote_address):
         text_version=settings.NEWSLETTER_CONSENT_VERSION,
         text=settings.NEWSLETTER_CONSENT_TEXT,
         source="public_form",
+        email_snapshot=contact.email,
+        privacy_version=settings.NEWSLETTER_PRIVACY_VERSION,
+        privacy_text=settings.NEWSLETTER_PRIVACY_TEXT,
+        text_sha256=hashlib.sha256(settings.NEWSLETTER_CONSENT_TEXT.encode()).hexdigest(),
+        remote_address=evidence_address(remote_address),
     )
     token = ConfirmationToken.objects.create(
         subscription=subscription,
         evidence=evidence,
         expires_at=now + timedelta(hours=24),
     )
-    ConfirmationMessage.objects.create(token=token)
+    ConfirmationMessage.objects.create(
+        token=token,
+        recipient=contact.email,
+        sender=settings.DEFAULT_FROM_EMAIL,
+        subject="Newsletter-Anmeldung bestätigen",
+        body_snapshot=render_to_string(
+            "emails/confirmation.txt",
+            {"link": "{{confirmation_link}}", "consent_text": evidence.text},
+        ),
+    )
     # Durable pending rows are picked up by Beat/management command; no broker call before commit.
 
 
 @transaction.atomic
-def confirm_subscription(value):
+def confirm_subscription(value, remote_address=""):
     reference = decode_reference(value, "confirmation")
     token = ConfirmationToken.objects.filter(pk=reference).first() if reference else None
     if token is None:
@@ -120,6 +136,13 @@ def confirm_subscription(value):
         text_version=token.evidence.text_version,
         text=token.evidence.text,
         source="confirmation_post",
+        email_snapshot=token.evidence.email_snapshot,
+        privacy_version=token.evidence.privacy_version,
+        privacy_text=token.evidence.privacy_text,
+        text_sha256=token.evidence.text_sha256,
+        remote_address=evidence_address(remote_address),
+        request_evidence=token.evidence,
+        confirmation_reference=token.id,
     )
     ConsentEvent.objects.create(
         name="subscription.confirmed",
@@ -151,6 +174,11 @@ def unsubscribe(value, source="unsubscribe_post"):
         source=source,
         text_version=latest.text_version if latest else "unknown",
         text=latest.text if latest else "",
+        email_snapshot=subscription.contact.email,
+        privacy_version=latest.privacy_version if latest else "",
+        privacy_text=latest.privacy_text if latest else "",
+        text_sha256=latest.text_sha256 if latest else "",
+        request_evidence=(latest.request_evidence or latest) if latest else None,
     )
     ConfirmationToken.objects.filter(subscription=subscription, consumed_at=None).update(
         expires_at=timezone.now()

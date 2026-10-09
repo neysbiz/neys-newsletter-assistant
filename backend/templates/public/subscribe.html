@@ -1,1 +1,1 @@
-{% extends 'layouts/base.html' %}{% block content %}<h1>Newsletter abonnieren</h1><form method="post">{% csrf_token %}{{ form.as_p }}<button>Bestätigung anfordern</button></form>{% endblock %}
+{% extends 'layouts/base.html' %}{% block content %}<h1>Newsletter abonnieren</h1><p>{{ form.privacy_text|linebreaksbr }}</p><form method="post">{% csrf_token %}{{ form.as_p }}<button>Bestätigung anfordern</button></form>{% endblock %}

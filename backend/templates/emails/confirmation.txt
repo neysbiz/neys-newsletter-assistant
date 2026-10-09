@@ -1,6 +1,9 @@
 {% autoescape off %}Bitte bestätige deine Newsletter-Anmeldung über diesen Link:
 {{ link }}
 
+Deine Einwilligung:
+{{ consent_text }}
+
 Der Link ist 24 Stunden gültig. Auf der Zielseite bestätigst du deine Anmeldung mit dem Button.
 Falls du diese Anmeldung nicht angefordert hast, kannst du diese Nachricht ignorieren.
 {% endautoescape %}

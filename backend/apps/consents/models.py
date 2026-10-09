@@ -5,6 +5,7 @@ from django.db import models
 
 class Subscription(models.Model):
     class Status(models.TextChoices):
+        IMPORTED = "imported", "Importiert – neue Bestätigung erforderlich"
         PENDING = "pending", "Bestätigung ausstehend"
         ACTIVE = "active", "Aktiv"
         UNSUBSCRIBED = "unsubscribed", "Abgemeldet"
@@ -19,7 +20,7 @@ class Subscription(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                condition=models.Q(status__in=["pending", "active", "unsubscribed"]),
+                condition=models.Q(status__in=["imported", "pending", "active", "unsubscribed"]),
                 name="valid_subscription_status",
             )
         ]
@@ -40,6 +41,15 @@ class ConsentEvidence(models.Model):
     text = models.TextField()
     source = models.CharField(max_length=40)
     occurred_at = models.DateTimeField(auto_now_add=True)
+    email_snapshot = models.EmailField(max_length=254, blank=True)
+    privacy_version = models.CharField(max_length=80, blank=True)
+    privacy_text = models.TextField(blank=True)
+    text_sha256 = models.CharField(max_length=64, blank=True)
+    remote_address = models.GenericIPAddressField(null=True, blank=True)
+    request_evidence = models.ForeignKey(
+        "self", null=True, blank=True, on_delete=models.PROTECT, related_name="followup_evidence"
+    )
+    confirmation_reference = models.UUIDField(null=True, blank=True)
 
 
 class ConfirmationToken(models.Model):
@@ -64,6 +74,15 @@ class ConfirmationMessage(models.Model):
     token = models.OneToOneField(ConfirmationToken, on_delete=models.PROTECT)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     updated_at = models.DateTimeField(auto_now=True)
+    message_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    recipient = models.EmailField(max_length=254, blank=True)
+    sender = models.EmailField(max_length=254, blank=True)
+    subject = models.CharField(max_length=254, blank=True)
+    # Snapshot with a placeholder, not the usable bearer link.
+    body_snapshot = models.TextField(blank=True)
+    body_sha256 = models.CharField(max_length=64, blank=True)
+    attempted_at = models.DateTimeField(null=True, blank=True)
+    accepted_at = models.DateTimeField(null=True, blank=True)
 
 
 class RateLimitBucket(models.Model):

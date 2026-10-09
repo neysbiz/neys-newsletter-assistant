@@ -9,3 +9,4 @@ class SubscribeForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["consent"].label = settings.NEWSLETTER_CONSENT_TEXT
+        self.privacy_text = settings.NEWSLETTER_PRIVACY_TEXT
