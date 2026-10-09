@@ -2,6 +2,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 from .models import Contact, ImportBatch
+from .services import prepare_mailchimp_row
 
 
 def contact_list(query=""):
@@ -33,6 +34,9 @@ def import_preview(batch):
     for entry in batch.rows:
         row = dict(entry)
         row["local_status"] = existing.get(entry["email"].strip().casefold(), "new")
+        row["marketing_flag"] = (
+            prepare_mailchimp_row(entry["row"])["marketing_flag"] if not entry["errors"] else None
+        )
         rows.append(row)
     return {
         "rows": rows,

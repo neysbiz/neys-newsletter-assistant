@@ -7,9 +7,9 @@
 <p>Vorschau gültig bis {{ batch.expires_at }}. {{ rows|length }} Datenzeilen, {{ errors }} fehlerhafte Zeilen, {{ duplicates }} identische Duplikatzeilen.</p>
 {% if batch.ignored_columns %}<p>Nicht übernommene Spalten: {{ batch.ignored_columns|join:', ' }}</p>{% endif %}
 <p>Vorhandene lokale Namen, Abmeldungen und Sperren bleiben erhalten. Der lokale Status wird bei der Übernahme erneut geprüft.</p>
-<table><thead><tr><th>Dateizeile</th><th>E-Mail</th><th>Vorname</th><th>Name</th><th>Prüfung</th><th>Lokaler Status</th></tr></thead><tbody>
-{% for entry in rows %}<tr><td>{{ entry.line }}</td><td>{{ entry.email }}</td><td>{{ entry.row.Vorname }}</td><td>{{ entry.row.Name }}</td><td>{% for error in entry.errors %}<p>{{ error }}</p>{% empty %}{% if entry.duplicate %}Identische Duplikatzeile – wird übersprungen{% else %}Gültig{% endif %}{% endfor %}</td><td>{{ entry.local_status }}</td></tr>{% endfor %}
-</tbody></table>
+<div class="table-scroll"><table><thead><tr><th>Dateizeile</th><th>E-Mail</th><th>Vorname</th><th>Name</th><th>Marketingflag</th><th>Prüfung</th><th>Lokaler Status</th></tr></thead><tbody>
+{% for entry in rows %}<tr><td>{{ entry.line }}</td><td>{{ entry.email }}</td><td>{{ entry.row.Vorname }}</td><td>{{ entry.row.Name }}</td><td>{{ entry.marketing_flag|yesno:'Ja,Nein,Unbekannt' }}</td><td>{% for error in entry.errors %}<p>{{ error }}</p>{% empty %}{% if entry.duplicate %}Identische Duplikatzeile – wird übersprungen{% else %}Gültig{% endif %}{% endfor %}</td><td>{{ entry.local_status }}</td></tr>{% endfor %}
+</tbody></table></div>
 {% if can_apply %}<form method="post">{% csrf_token %}{{ form.as_p }}<button>Kontakte ohne Versandfreigabe übernehmen</button></form>{% else %}{{ form.non_field_errors }}<p>Übernahme nicht möglich: Fehler korrigieren oder abgelaufene Vorschau neu erstellen.</p>{% endif %}
 <form method="post">{% csrf_token %}<input type="hidden" name="action" value="cancel"><button>Vorschau verwerfen</button></form>
 {% else %}<p>Die Vorschau wurde verworfen. Es wurden keine Kontakte übernommen.</p>{% endif %}

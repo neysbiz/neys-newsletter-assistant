@@ -56,6 +56,7 @@ def test_full_upload_preview_confirm_and_repeat(client, operator):
     assert response["Cache-Control"] == "no-store"
     assert b"one@example.com" in response.content
     assert b"Duplikatzeile" in response.content
+    assert response.context["rows"][0]["marketing_flag"] is True
     url = reverse("contact_import_preview", args=[batch.id])
     # Checkbox missing: no contact writes.
     assert client.post(url, {}).status_code == 200
