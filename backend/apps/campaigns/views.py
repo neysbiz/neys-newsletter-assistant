@@ -97,7 +97,7 @@ def preview(request, revision_id):
         "default-src 'none'; img-src 'self' https:; style-src 'unsafe-inline'"
     )
     response["Cache-Control"] = "no-store"
-    response["Referrer-Policy"] = "no-referrer"
+    response["Referrer-Policy"] = "same-origin"
     return response
 
 

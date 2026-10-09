@@ -221,10 +221,13 @@ def test_contact_list_is_staff_only(client, django_user_model):
     assert client.get(reverse("contacts")).status_code == 200
 
 
-def test_token_pages_do_not_cache_or_leak_referrers(client, pending):
-    response = client.get(reverse("confirm", args=[confirmation(pending)]))
+@pytest.mark.parametrize("page", ["subscribe", "confirm", "unsubscribe"])
+def test_public_forms_preserve_origin_without_external_referrers(client, pending, page):
+    reference = confirmation(pending) if page == "confirm" else withdrawal(pending)
+    url = reverse(page) if page == "subscribe" else reverse(page, args=[reference])
+    response = client.get(url)
     assert response["Cache-Control"] == "no-store"
-    assert response["Referrer-Policy"] == "no-referrer"
+    assert response["Referrer-Policy"] == "same-origin"
 
 
 def test_suppression_added_after_request_cancels_doi(pending):
@@ -232,3 +235,17 @@ def test_suppression_added_after_request_cancels_doi(pending):
     dispatch_confirmations()
     assert not mail.outbox
     assert ConfirmationMessage.objects.get().status == "cancelled"
+
+
+@pytest.mark.parametrize("secure", [False, True])
+def test_confirmation_post_validates_browser_origin(pending, secure):
+    client = Client(enforce_csrf_checks=True)
+    url = reverse("confirm", args=[confirmation(pending)])
+    client.get(url, secure=secure)
+    data = {"csrfmiddlewaretoken": client.cookies["csrftoken"].value}
+    for origin in ["null", "https://foreign.example"]:
+        assert client.post(url, data, secure=secure, HTTP_ORIGIN=origin).status_code == 403
+    assert not can_send_campaign(pending.contact_id)
+    origin = "https://testserver" if secure else "http://testserver"
+    assert client.post(url, data, secure=secure, HTTP_ORIGIN=origin).status_code == 200
+    assert can_send_campaign(pending.contact_id)

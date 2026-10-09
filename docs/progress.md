@@ -23,3 +23,9 @@ Tatsächlich geprüft: 47 Funktionsprüfungen erfolgreich in temporärem SQLite-
 PostgreSQL/Parallelitätsgate, Docker-Start und GitHub CI bleiben offen. SSR-Seiten für Editor, öffentliche Anmeldung und Revisionvorschau tatsächlich mit Django Client gerendert (HTTP 200); keine Browser-Screenshot-/Mobile-Abnahme, Chromium-Download hier gescheitert. Outlook/Apple-Mail/Gmail ebenfalls nicht praktisch geprüft. Kein Produktivdeploy und keine echten Mails. Remote ausschließlich Ausgangsroadmap, Mac unverändert.
 
 Lokale Integrationsreihenfolge: M0 `7d597c4` → M1 `0bea0a8` → M3 `7071d88`, jeweils lokaler Fast-Forward auf main. Kein paralleler aktiver Featurekontext. Lokale Integration ist keine vollständige Abnahme. Handoff-Dokumentation auf eigenem docs-Branch.
+
+## 09.10.2026 – CSRF bei Formular-POSTs
+
+Branch `fix/form-origin-policy`, Basis `ee740ace`. Öffentliche Formulare und Revisionsvorschau setzen jetzt `Referrer-Policy: same-origin` statt `no-referrer`. Letzteres kann laut Fetch-/Browser-Verhalten Formularanfragen mit `Origin: null` auslösen. Externe Ziele erhalten weiterhin keinen Referrer; Django-CSRF bleibt aktiv. Regressionsprüfungen decken die öffentlichen Seiten sowie gültige HTTP-/HTTPS-Origins und abgewiesene null/fremde Origins ab. Kein Schemawechsel.
+
+Lokal: 51 portable Funktionsprüfungen erfolgreich, 3 Infrastruktur-/PostgreSQL-Prüfungen ausgeschlossen; temporärer externer SQLite-Harness unter Python 3.12.14, keine unterstützte Anwendungskonfiguration. Django-Systemcheck, Migrationsdelta, Ruff lint/format und Diffprüfung erfolgreich. Kein Browser-Nachtest auf dem Mac möglich; vollständige PostgreSQL-/Redis-Abnahme erfolgt durch CI nach Übertragung. Der vorherige Bootstrap-CI-Lauf 37422663778 bestand mit 50 Tests.
