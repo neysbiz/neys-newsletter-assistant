@@ -1,5 +1,7 @@
 # Fortschritt
 
+Abschluss Uploadpaket: Auch der abschließende Featurestand e1d5d56 hat das vollständige CI-Gate bestanden (Lauf 37971479324). Anschließend Fast-Forward-Integration auf main. Keine Kundendaten übernommen, keine Mails versendet. Die folgende Dokumentationsänderung verändert keinen Anwendungscode.
+
 ## 09.10.2026 – M2-Datei-Upload, Vorschau und Übernahme
 
 Branch feat/mailchimp-upload-preview, Basis 958649d. Staff-/benutzergebundener Upload, explizite Auswahl CSV/TSV-Trennzeichen, UTF-8/BOM-Prüfung, Größen-/Zeilen-/Feldgrenzen, Fehler- und Duplikatprüfung umgesetzt. Vorschau erzeugt keine Kontakte. All-or-nothing-Übernahme erfordert Checkbox und CSRF-POST; Batch-Lock verhindert doppelte Bestätigung. Aktuelle Abmeldungen/Sperren werden erhalten. Fehler/Abbruch führen zu keiner Teilübernahme. Keine Mails und keine automatische Versandfreigabe. Importmetadaten/Prüfsumme bleiben nachvollziehbar; vorläufige Zeilen nach Übernahme/Verwerfen gelöscht. Ablauf nach 30 Minuten, Beat/CLI-Bereinigung ergänzt.
